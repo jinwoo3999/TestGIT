@@ -1,12 +1,33 @@
 import { Database } from 'sqlite3';
-import { Expense, Order } from '../types';
+export interface Expense {
+    id?: number;
+    amount: number;
+    description: string;
+    date: string;
+    // add other necessary fields
+}
+
+export interface Order {
+    id?: number;
+    total: number;
+    date: string;
+    // add other necessary fields
+}
 
 export class DatabaseService {
-    private db: Database | null = null;
-    private dbPath: string;
+    private db: any;
+    
+    constructor(private dbPath: string) {
+    }
 
-    constructor(dbPath: string) {
-        this.dbPath = dbPath;
+    async connect(): Promise<void> {
+        // Add database connection logic here
+        this.db = await this.initializeDatabase();
+    }
+
+    private async initializeDatabase() {
+        // Implement database initialization
+        // Return database instance
     }
 
     async getExpenses(): Promise<Expense[]> {
@@ -15,7 +36,7 @@ export class DatabaseService {
                 reject(new Error('Database not connected'));
                 return;
             }
-            this.db.all('SELECT * FROM expenses', (err, rows) => {
+            this.db.all('SELECT * FROM expenses', (err: Error | null, rows: any[]) => {
                 if (err) {
                     reject(err);
                     return;
@@ -31,7 +52,7 @@ export class DatabaseService {
                 reject(new Error('Database not connected'));
                 return;
             }
-            this.db.all('SELECT * FROM orders', (err, rows) => {
+            this.db.all('SELECT * FROM orders', (err: Error | null, rows: any[]) => {
                 if (err) {
                     reject(err);
                     return;
