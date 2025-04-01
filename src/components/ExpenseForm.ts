@@ -1,4 +1,7 @@
 export class ExpenseForm {
+    submitExpense(body: any) {
+        throw new Error('Method not implemented.');
+    }
     private category: string;
     private amount: number;
     private date: Date;

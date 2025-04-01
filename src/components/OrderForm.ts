@@ -1,20 +1,32 @@
-class OrderForm {
+interface IOrderForm {
+    orderId: string;
+    customerName: string;
+    items: Array<{
+      name: string;
+      quantity: number;
+      price: number;
+    }>;
+  }
+  
+  export default class OrderForm {
+    private orderData: IOrderForm;
+  
     constructor() {
-        // Initialize form elements and event listeners
+      this.orderData = {
+        orderId: '',
+        customerName: '',
+        items: []
+      };
     }
-
-    render() {
-        // Render the order form UI
+  
+    submitOrder(data: IOrderForm) {
+      this.orderData = data;
+      return this.orderData;
     }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        // Handle form submission, including product selection and quantity
+  
+    getOrderTotal(): number {
+      return this.orderData.items.reduce((total, item) => {
+        return total + (item.price * item.quantity);
+      }, 0);
     }
-
-    validateInput() {
-        // Validate the input fields before submission
-    }
-}
-
-export default OrderForm;
+  }

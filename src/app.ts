@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { DatabaseService } from './services/DatabaseService';
 import { Dashboard } from './components/Dashboard';
-import { OrderForm } from './components/OrderForm';
+import OrderForm from './components/OrderForm';
 import { ExpenseForm } from './components/ExpenseForm';
 import { Reports } from './components/Reports';
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Initialize Database
-const databaseService = new DatabaseService();
+const databaseService = new DatabaseService('./data/database.sqlite');
 databaseService.connect();
 
 // Routes
@@ -30,13 +30,15 @@ app.post('/orders', (req, res) => {
 });
 
 app.post('/expenses', (req, res) => {
-    const expenseForm = new ExpenseForm();
+    const expenseForm = new ExpenseForm(req.body.category, req.body.amount, new Date(req.body.date));
     const result = expenseForm.submitExpense(req.body);
     res.json(result);
 });
 
-app.get('/reports', (req, res) => {
-    const reports = new Reports();
+app.get('/reports', async (req, res) => {
+    const expenses = await databaseService.getExpenses();
+    const orders = await databaseService.getOrders();
+    const reports = new Reports(expenses, orders);
     res.json(reports.generateReports());
 });
 

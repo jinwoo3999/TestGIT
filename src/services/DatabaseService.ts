@@ -1,31 +1,47 @@
+import { Database } from 'sqlite3';
+import { Expense, Order } from '../types';
+
 export class DatabaseService {
-    private db: any;
+    private db: Database | null = null;
+    private dbPath: string;
 
-    constructor(databasePath: string) {
-        this.db = this.connectToDatabase(databasePath);
+    constructor(dbPath: string) {
+        this.dbPath = dbPath;
     }
 
-    private connectToDatabase(databasePath: string) {
-        // Logic to connect to the SQLite database
+    async getExpenses(): Promise<Expense[]> {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject(new Error('Database not connected'));
+                return;
+            }
+            this.db.all('SELECT * FROM expenses', (err, rows) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(rows as Expense[]);
+            });
+        });
     }
 
-    public saveOrder(order: any) {
-        // Logic to save an order to the database
-    }
-
-    public saveExpense(expense: any) {
-        // Logic to save an expense to the database
-    }
-
-    public getOrders() {
-        // Logic to retrieve all orders from the database
-    }
-
-    public getExpenses() {
-        // Logic to retrieve all expenses from the database
-    }
-
-    public getSummary() {
-        // Logic to get a summary of expenses and profits
+    async getOrders(): Promise<Order[]> {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject(new Error('Database not connected'));
+                return;
+            }
+            this.db.all('SELECT * FROM orders', (err, rows) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(rows as Order[]);
+            });
+        });
     }
 }
+
+export const DATABASE_CONFIG = {
+    path: './data/database.sqlite'
+};

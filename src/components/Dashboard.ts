@@ -1,4 +1,10 @@
 export class Dashboard {
+    getSummary(): any {
+        return {
+            totalExpenses: this.totalExpenses,
+            totalProfit: this.totalProfit
+        };
+    }
     private totalExpenses: number;
     private totalProfit: number;
 

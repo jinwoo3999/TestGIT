@@ -1,4 +1,7 @@
 export class Reports {
+    generateReports(): any {
+        throw new Error('Method not implemented.');
+    }
     private expenses: any[]; // Array to hold expense data
     private orders: any[]; // Array to hold order data
 
